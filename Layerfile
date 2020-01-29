@@ -1,0 +1,36 @@
+FROM vm/ubuntu:18.04
+
+# cache /var/lib/apt to speed up apt-get install
+CACHE /var/lib/apt
+
+RUN apt-get update
+RUN apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    software-properties-common
+CHECKPOINT
+
+# install docker
+RUN curl -L \
+    https://download.docker.com/linux/ubuntu/gpg\
+    | apt-key add -
+RUN add-apt-repository \
+    "deb [arch=amd64] \
+    https://download.docker.com/linux/ubuntu \
+    $(lsb_release -cs) \
+    stable"
+RUN apt-get update
+RUN apt-get install -y \
+    'docker-ce=19.03*' \
+    'docker-ce-cli=19.03*'
+CHECKPOINT
+
+# install kubernetes
+RUN curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+RUN echo 'deb https://apt.kubernetes.io/ kubernetes-xenial main' > /etc/apt/sources.list.d/kubernetes.list
+RUN apt-get update
+RUN apt-get install -y kubelet kubeadm kubectl
+RUN apt-mark hold kubelet kubeadm kubectl
+CHECKPOINT

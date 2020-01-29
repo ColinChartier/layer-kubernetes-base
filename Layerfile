@@ -23,8 +23,8 @@ RUN add-apt-repository \
     stable"
 RUN apt-get update
 RUN apt-get install -y \
-    'docker-ce=19.03*' \
-    'docker-ce-cli=19.03*'
+    'docker-ce' \
+    'docker-ce-cli'
 CHECKPOINT
 
 # install kubernetes
